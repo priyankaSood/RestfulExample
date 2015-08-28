@@ -1,10 +1,16 @@
 package com.infosys.dao;
 
+import java.io.File;
+import java.io.FileReader;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
+import java.util.ResourceBundle;
+
 import com.infosys.model.Item;
 import com.infosys.util.DBUtilImpl;
 public class ItemDAOImpl implements ItemDAO {
@@ -16,10 +22,18 @@ public class ItemDAOImpl implements ItemDAO {
 		Connection conn = null;
 		DBUtilImpl dbUtil = new DBUtilImpl();
 		List<Item> itemList = new ArrayList<Item>();
-		
+		//File configFile =new File("config.properties");
+		InputStream is =null;
 		try {
+			//FileReader reader =new FileReader(configFile);
+			Properties props =new Properties();
+			is= this.getClass().getResourceAsStream("/com/infosys/resources/config.properties");
+			props.load(is);
+			String tableName =props.getProperty("tablename");
+			
 			conn = dbUtil.getConnection();
-			PreparedStatement ps=conn.prepareStatement("select * from FURNITUREGURU");			
+			//PreparedStatement ps=conn.prepareStatement("select * from FURNITUREGURU");	
+			PreparedStatement ps=conn.prepareStatement("select * from "+tableName);
 			ResultSet rs=ps.executeQuery();
 			while (rs.next()){
 				//System.out.println(rs.getString(0));
